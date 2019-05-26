@@ -8,13 +8,16 @@ int main()
     long size;
     int val[256] = {0};
 
-    fp = fopen("/home/jose/Documents/Operativos/huffmantree/piolin.jpg", "rb"); // Open the file in binary mode
+    fp = fopen("/home/jose/Documents/huffmantree/ezgif.com-gif-to-mp4.mp4", "rb"); // Open the file in binary mode
     int ch;
     while((ch=fgetc(fp))!=EOF){
         ++val[ch];
     } 
     fclose(fp);
-   printf("%d",val[255]);
+    for(int i=0; i<256; i++){
+   printf("%d",val[i]);
+   printf("\n");
+    }
          // Read in the entire file
      
     return 0;
