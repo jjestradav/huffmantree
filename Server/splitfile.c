@@ -8,7 +8,7 @@ void split(FILE *fp, char *filename, int maquinas)
 {
     FILE *out;
     int max = file_size(filename);
-    int tam = max / maquinas + 1;
+    int tam = max / maquinas ;
     char buffer[tam];
     int result;
     int size;
@@ -39,7 +39,7 @@ void split(FILE *fp, char *filename, int maquinas)
                 }
 
                 /* calculate size of data to be read from input file in order to not exceed maxSize */
-                read = sizeof(buffer);
+                read = tam;
                 if ((size + read) > max)
                 {
                     read = max - size;
@@ -63,7 +63,7 @@ void split(FILE *fp, char *filename, int maquinas)
 
                 /* update size counter of current output file */
                 size += written;
-                if (size >= max) /* next split? */
+                if (size <= max) /* next split? */
                 {
                     fclose(out);
                     out = NULL;
