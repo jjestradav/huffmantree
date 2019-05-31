@@ -1,10 +1,45 @@
 #include "splitfile.c"
+#include <pthread.h>
+#include <string.h>
+int cantmaquinas;
+char *filename;
+//split -n 3 piolin.jpg
+void *splitf(void *p)
+{
+    char src[100], dest[100];
+    char cant[10];
+    sprintf(cant, "%d  ", cantmaquinas);
+    strcpy(src, cant);
+    strcpy(dest, filename);
+    strcat(src, dest);
+    // printf("%s", src);
+    // printf("\n");
+    
+    char dest1[100];    
+    strcpy(dest1, "split -n ");
+    strcat(dest1, src);
+    // printf("%s", dest1);
+    //  printf("\n");
+     char *argv[10];
+     argv[0]=dest1;
+    printf("%s", argv[0]);
+    printf("\n");
+  system(dest1);
+}
+pthread_t splitfile;
 int main(int argc, char **argv)
 {
     FILE *file;
-    char *filename;
     filename = argv[1];
-    split(file,filename,2);
+    cantmaquinas = atoi(argv[2]);
+    pthread_create(&splitfile, NULL, splitf, NULL);
+    pthread_join(splitfile, NULL);
+    printf("termino la otra vara pero el programa no. AMEN");
+    printf("\n");
+    printf("%d", 5+5+5+5);
+    printf("\n");
+    // split(file,filename,5);
+
     return 0;
 }
 

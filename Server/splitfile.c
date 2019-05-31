@@ -8,7 +8,7 @@ void split(FILE *fp, char *filename, int maquinas)
 {
     FILE *out;
     int max = file_size(filename);
-    int tam = max / maquinas ;
+    int tam = (max / maquinas) + 1 ;
     char buffer[tam];
     int result;
     int size;
@@ -20,11 +20,10 @@ void split(FILE *fp, char *filename, int maquinas)
         if (fp != NULL)
         {
             out = NULL;
-            result = 1; /* we have at least one part */
-
+            result = 1; 
             while (!feof(fp))
             {
-                /* initialize (next) output file if no output file opened */
+                
                 if (out == NULL)
                 {
                     sprintf(buffer, "%s.%03d", filename, result);
@@ -38,14 +37,14 @@ void split(FILE *fp, char *filename, int maquinas)
                     size = 0;
                 }
 
-                /* calculate size of data to be read from input file in order to not exceed maxSize */
+                
                 read = tam;
                 if ((size + read) > max)
                 {
                     read = max - size;
                 }
 
-                /* read data from input file */
+                
                 read = fread(buffer, 1, read, fp);
                 if (read == 0)
                 {
@@ -53,7 +52,7 @@ void split(FILE *fp, char *filename, int maquinas)
                     break;
                 }
 
-                /* write data to output file */
+               
                 written = fwrite(buffer, 1, read, out);
                 if (written != read)
                 {
@@ -61,9 +60,9 @@ void split(FILE *fp, char *filename, int maquinas)
                     break;
                 }
 
-                /* update size counter of current output file */
+               
                 size += written;
-                if (size <= max) /* next split? */
+                if (size <= max) 
                 {
                     fclose(out);
                     out = NULL;
@@ -71,7 +70,7 @@ void split(FILE *fp, char *filename, int maquinas)
                 }
             }
 
-            /* clean up */
+            
             if (out != NULL)
             {
                 fclose(out);
@@ -82,7 +81,7 @@ void split(FILE *fp, char *filename, int maquinas)
 }
 int file_size(char *filename)
 {
-    FILE *fp = fopen(filename, "rb"); //must be binary read to get bytes
+    FILE *fp = fopen(filename, "rb"); 
 
     int size = -1;
     if (fp)
