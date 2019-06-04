@@ -10,6 +10,7 @@
 int cantmaquinas;
 char *filename;
 //split -n 3 piolin.jpg
+void *connection_handler(void *client_socket);
 void *splitf(void *p)
 {
     char src[100], dest[100];
@@ -87,7 +88,7 @@ void *connection_handler(void *client_socket)
     while ((read_size = recv(socket, client_message, 2000, 0)) > 0)
     {
         client_message[read_size] = '\0';
-        write(socket, client_message, srtlen(client_message));
+        write(socket, client_message, strlen(client_message));
 
         memset(client_message, 0, 2000);
     }

@@ -1,13 +1,20 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-void cuentafrecuancia(int *fecuencia, FILE *fp, char *filename);
-void cuentafreciuencia(int *frecuencia, FILE *fp, char *filename)
+typedef struct frecuencia{
+int frecuencia;
+int valor;
+}freq;
+void cuentafrecuancia(int *fecuencia, FILE *fp, char *filename, freq *est);
+void cuentafreciuencia(int *frecuencia, FILE *fp, char *filename, freq*est)
 {
   fp= fopen(filename, "rb");
   int ch;
+  int fr;
   while((ch=fgetc(fp))!=EOF){
-    ++frecuencia[ch];
+    fr=++frecuencia[ch];
+    est->frecuencia=fr;
+    est->valor=ch;
   }
    fclose(fp);
 }
