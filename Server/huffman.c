@@ -1,10 +1,12 @@
 
 #include <stdio.h> 
 #include <stdlib.h> 
-  
+#include"../Client/ldf.c"
+typedef struct MinHeapNode node;
+void printInorder(node* root );
 // This constant can be avoided by explicitly 
 // calculating height of Huffman Tree 
-#define MAX_TREE_HT 100 
+#define MAX_TREE_HT 255 
   
 // A Huffman tree node 
 struct MinHeapNode { 
@@ -161,12 +163,23 @@ void buildMinHeap(struct MinHeap* minHeap)
 } 
   
 // A utility function to print an array of size n 
-void printArr(int arr[], int n) 
+void printArr(int arr[], int n, FILE * file) 
 { 
     int i; 
-    for (i = 0; i < n; ++i) 
-        printf("%d", arr[i]); 
+    for (i = 0; i < n; i++){
+        if(i==n-1){
+        fprintf(file,"%d\n",arr[i]);
+        }
+        else{
+            fprintf(file,"%d",arr[i]);
+        }
+
+    }
+           
   
+
+     
+        
     printf("\n"); 
 } 
   
@@ -188,7 +201,7 @@ struct MinHeap* createAndBuildMinHeap(char data[], int freq[], int size)
   
     struct MinHeap* minHeap = createMinHeap(size); 
   
-    for (int i = 0; i < size; ++i) 
+    for (int i = 0; i < size; i++) 
         minHeap->array[i] = newNode(data[i], freq[i]); 
   
     minHeap->size = size; 
@@ -238,7 +251,7 @@ struct MinHeapNode* buildHuffmanTree(char data[], int freq[], int size)
   
 // Prints huffman codes from the root of Huffman Tree. 
 // It uses arr[] to store codes 
-void printCodes(struct MinHeapNode* root, int arr[], int top) 
+void printCodes(struct MinHeapNode* root, int arr[], int top, FILE * file) 
   
 { 
   
@@ -246,14 +259,14 @@ void printCodes(struct MinHeapNode* root, int arr[], int top)
     if (root->left) { 
   
         arr[top] = 0; 
-        printCodes(root->left, arr, top + 1); 
+        printCodes(root->left, arr, top + 1,file); 
     } 
   
     // Assign 1 to right edge and recur 
     if (root->right) { 
   
         arr[top] = 1; 
-        printCodes(root->right, arr, top + 1); 
+        printCodes(root->right, arr, top + 1,file); 
     } 
   
     // If this is a leaf node, then 
@@ -261,16 +274,20 @@ void printCodes(struct MinHeapNode* root, int arr[], int top)
     // characters, print the character 
     // and its code from arr[] 
     if (isLeaf(root)) { 
-  
-        printf("%c: ", root->data); 
-        printArr(arr, top); 
+        
+        if(root->freq>0){
+            //printf("%c:",root->data);
+          fprintf(file,"%c: ", root->data); 
+          printArr(arr, top,file); 
+        }
+        
     } 
 } 
   
 // The main function that builds a 
 // Huffman Tree and print codes by traversing 
 // the built Huffman Tree 
-void HuffmanCodes(char data[], int freq[], int size) 
+void HuffmanCodes(char data[], int freq[], int size, FILE * file) 
   
 { 
     // Construct Huffman Tree 
@@ -281,5 +298,49 @@ void HuffmanCodes(char data[], int freq[], int size)
     // the Huffman tree built above 
     int arr[MAX_TREE_HT], top = 0; 
   
-    printCodes(root, arr, top); 
+    printCodes(root, arr, top,file);
+    //printInorder(root); 
 } 
+typedef struct MinHeapNode node;
+void printInorder(node* root ) 
+{ 
+     if (root == NULL) 
+          return; 
+
+    printInorder(root->left); 
+     printf("%c ", root->data); 
+       printInorder(root->right);
+    
+} 
+
+int main(){
+    char aux[255];
+    for(int i=0; i<255; i++)
+            aux[i]=i;
+
+           // printf("%c",aux[66]);
+    FILE* file;
+   // int *ptr = malloc(5 * sizeof *ptr);
+    int * frecuencias=malloc(255*sizeof(*frecuencias));
+
+    // int a;
+    // printf("%d",a);
+    // for(int i=0; i<255; i++)
+    //     frecuencias[i]=0;
+
+    cuentafrecuencia(frecuencias,file,"../files/abcd.txt");
+
+//for(int i=0; i<255;i++)
+  //  printf("%c: %d\n",i,frecuencias[i]);
+
+    //int size = sizeof(frecuencias) / sizeof(frecuencias[0]);
+   // printf("%ld",sizeof(frecuencias));
+   FILE * fp;
+   fp = fopen ("file.txt", "w");
+//    fprintf(file,"%s","hola");
+    HuffmanCodes(aux,frecuencias,255,fp);
+    //fclose(fp);
+    //fclose(file);
+
+    return 0;
+}
